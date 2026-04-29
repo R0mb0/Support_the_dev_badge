@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="253" height="30">
+    <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="margin: 0px; padding: 0px; width: 100%; height: 100%; display: inline-block;">
+
+
+<meta charset="UTF-8" />
+<style>
+  .badge-container-dark {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(0, 156, 222, 0.5);
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    white-space: nowrap; /* Impedisce al testo di andare a capo */
+    height: 28px; /* Altezza fissa per aiutare il convertitore */
+  }
+  .badge-text-dark {
+    padding: 0 10px;
+    color: #c9d1d9;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 26px; /* Centra il testo verticalmente */
+  }
+  .badge-icon-dark {
+    background-color: #0070BA; 
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  svg { display: block; }
+</style>
+
+
+  <div class="badge-container-dark">
+    <div class="badge-text-dark">Saved you time? Support the dev 💙</div>
+    <div class="badge-icon-dark">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 6.007 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.815.865 4.797-.843 3.805-3.106 5.85-6.883 5.85h-1.638a1.235 1.235 0 0 0-1.221 1.045l-1.026 4.763-.44 2.89a.852.852 0 0 1-.838.718z"/>
+      </svg>
+    </div>
+  </div>
+
+</div>
+    </foreignObject>
+</svg>
