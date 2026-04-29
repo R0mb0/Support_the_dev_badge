@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create your PayPal donation badge for GitHub</title>
+    <!-- Tailwind CSS for modern, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for the copy button -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Tailwind config per aggiungere i colori specifici di PayPal e supportare la dark mode di sistema
+        tailwind.config = {
+            darkMode: 'media', // Rileva automaticamente le preferenze di sistema
+            theme: {
+                extend: {
+                    colors: {
+                        paypal: {
+                            light: '#009cde', // PayPal Light Blue
+                            dark: '#003087',  // PayPal Dark Blue
+                            brand: '#0070BA', // PayPal Brand Color
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles per animazioni fluide */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Stile personalizzato per la scrollbar della codebox */
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 112, 186, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 112, 186, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
+
+    <main class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+
+        <!-- Header Section con i colori PayPal -->
+        <div class="bg-gradient-to-r from-paypal-dark to-paypal-brand p-8 text-center">
+            <!-- Icona PayPal semplificata generata in SVG -->
+            <svg class="w-16 h-16 mx-auto mb-4 text-white drop-shadow-md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 6.007 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.815.865 4.797-.843 3.805-3.106 5.85-6.883 5.85h-1.638a1.235 1.235 0 0 0-1.221 1.045l-1.026 4.763-.44 2.89a.852.852 0 0 1-.838.718z"/>
+            </svg>
+            <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Create your PayPal donation badge</h1>
+        </div>
+
+        <!-- Input Section -->
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="space-y-2">
+                <label for="paypal-link" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Your PayPal Donation Link
+                </label>
+                <input
+                    type="url"
+                    id="paypal-link"
+                    placeholder="https://paypal.me/yourusername"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-paypal-brand focus:border-transparent outline-none transition-all duration-200"
+                >
+            </div>
+
+            <button
+                id="generate-btn"
+                class="w-full bg-paypal-brand hover:bg-paypal-dark text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 active:scale-[0.98] flex justify-center items-center gap-2"
+            >
+                <i data-lucide="wand-2" class="w-5 h-5"></i>
+                Generate!
+            </button>
+
+            <!-- Output Section (Hidden by default) -->
+            <div id="output-section" class="hidden fade-in space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-end">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Your Markdown code:</p>
+                    <button
+                        id="copy-btn"
+                        class="text-sm flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 transition-colors"
+                    >
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span id="copy-text">Copy</span>
+                    </button>
+                </div>
+
+                <div class="relative group">
+                    <pre class="w-full p-4 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-x-auto text-sm font-mono text-gray-800 dark:text-gray-200 leading-relaxed"><code id="code-output"></code></pre>
+                </div>
+
+                <div class="text-center bg-blue-50 dark:bg-blue-900/30 text-paypal-dark dark:text-blue-300 p-3 rounded-lg flex items-center justify-center gap-2 text-sm font-medium">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-paypal-brand"></i>
+                    Now you can add the badge wherever you want on GitHub!
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+        
+    </footer>
+
+    <script>
+        // Inizializza le icone Lucide
+        lucide.createIcons();
+
+        const generateBtn = document.getElementById('generate-btn');
+        const linkInput = document.getElementById('paypal-link');
+        const outputSection = document.getElementById('output-section');
+        const codeOutput = document.getElementById('code-output');
+        const copyBtn = document.getElementById('copy-btn');
+        const copyText = document.getElementById('copy-text');
+        const copyIcon = copyBtn.querySelector('i');
+
+        // Modello base del codice. Ho formattato l'HTML per essere pulito nella codebox.
+        const templateCode = `<a href="{{LINK}}">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Light.svg">
+    <img alt="Saved you time? Support the dev" src="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Default.svg">
+  </picture>
+</a>`;
+
+        // Logica di generazione
+        generateBtn.addEventListener('click', () => {
+            const userLink = linkInput.value.trim();
+
+            // Basic validation
+            if (!userLink) {
+                // Semplice feedback visivo
+                linkInput.classList.add('ring-2', 'ring-red-500', 'border-transparent');
+                setTimeout(() => {
+                    linkInput.classList.remove('ring-2', 'ring-red-500', 'border-transparent');
+                }, 1000);
+                return;
+            }
+
+            // Sostituisce il placeholder con il link utente
+            // Nota: HTML encode elementare per evitare che link "strani" rompano l'HTML
+            const safeLink = userLink.replace(/"/g, '&quot;');
+            const finalCode = templateCode.replace('{{LINK}}', safeLink);
+
+            // Mostra il codice e la sezione output
+            codeOutput.textContent = finalCode;
+            outputSection.classList.remove('hidden');
+
+            // Scroll down in modo fluido per mostrare l'output
+            outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Resetta lo stato del bottone copia (nel caso fosse stato cliccato prima)
+            resetCopyButton();
+        });
+
+        // Logica per copiare negli appunti usando document.execCommand come richiesto dalle istruzioni
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = codeOutput.textContent;
+
+            // Crea un elemento textarea temporaneo per la copia
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            // Sposta la textarea fuori dallo schermo per non alterare il layout
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '0';
+            document.body.appendChild(textarea);
+
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // Per mobile
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    // Feedback visivo di successo
+                    copyText.textContent = 'Copied!';
+                    copyBtn.classList.replace('text-gray-700', 'text-green-600');
+                    copyBtn.classList.replace('dark:text-gray-300', 'dark:text-green-400');
+                    // Cambia temporaneamente l'icona
+                    copyBtn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span id="copy-text">Copied!</span>`;
+                    lucide.createIcons(); // Re-inizializza la nuova icona
+
+                    setTimeout(resetCopyButton, 2500);
+                }
+            } catch (err) {
+                console.error('Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textarea);
+        });
+
+        function resetCopyButton() {
+            copyBtn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i><span id="copy-text">Copy</span>`;
+            copyBtn.classList.remove('text-green-600', 'dark:text-green-400');
+            copyBtn.classList.add('text-gray-700', 'dark:text-gray-300');
+            lucide.createIcons();
+        }
+
+        // Permette di generare premendo Invio
+        linkInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
